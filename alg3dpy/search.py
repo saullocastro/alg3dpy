@@ -1,4 +1,6 @@
-import numpy
+import numpy as np
+#FIXME use kdtree stuff from scipy
+
 def closest_points(a, b, ncp=10):
     '''Returns the closest points from "b" for each line in "a"
     a is the array representing the points for which the closest have to be
@@ -32,7 +34,7 @@ def closest_points(a, b, ncp=10):
     r_b_argsort = r_b.argsort()
     r_b_sorted = r_b[r_b_argsort]
     num_groups_b = 1000
-    group_r_vals = numpy.linspace(r_b_sorted[0],r_b_sorted[-1],num_groups_b)
+    group_r_vals = np.linspace(r_b_sorted[0],r_b_sorted[-1],num_groups_b)
     groups_b = {} # stored group_r_val:[pos,pt]
     group_i = 0
     for i, r_b in enumerate(r_b_sorted):

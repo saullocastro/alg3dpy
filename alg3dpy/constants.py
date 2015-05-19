@@ -15,7 +15,7 @@ X = Vec( np.array((1,0,0), dtype=FLOAT) )
 Y = Vec( np.array((0,1,0), dtype=FLOAT) )
 Z = Vec( np.array((0,0,1), dtype=FLOAT) )
 from plane import plane1vec1pt
-XY = plane1vec1pt(Z, O)
-XZ = plane1vec1pt(Y, O)
-YZ = plane1vec1pt(X, O)
+PLANEXY = plane1vec1pt(Z, O)
+PLANEXZ = plane1vec1pt(Y, O)
+PLANEYZ = plane1vec1pt(X, O)
 
