@@ -1,13 +1,11 @@
 import numpy as np
 
-from constants import MAXID, PLANEXY, PLANEXZ
-
 class Vec(np.ndarray):
     """
     """
     uniqueid = 1
 
-    def __array_finalize__(self):
+    def __array_finalize__(self, obj):
         self.id = Vec.uniqueid
         Vec.uniqueid += 1
 
@@ -56,6 +54,8 @@ class Vec(np.ndarray):
             return anglelinevec(entity, self)
 
     def cosines_GLOBAL(self):
+        from constants import PLANEXY, PLANEXZ
+
         cosbeta = cosplanevec(PLANEXY, self)
         cosgama = cosplanevec(PLANEXZ, self)
         return [cosbeta, cosgama]

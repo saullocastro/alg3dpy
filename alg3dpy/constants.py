@@ -1,4 +1,9 @@
 import numpy as np
+
+from point import Point
+from vector import Vec
+from plane import plane1vec1pt
+
 MAXID = 99999999
 FLOAT = 'float64' # 'float32' 'float128'
 INT16 = 'int16'   # 2**16 =           65,536 unique values
@@ -8,13 +13,12 @@ INT   = INT32       # default
 ONE   = 1.
 TOL   = 1e-6
 ZER   = 0.
-from point import Point
-O = Point( np.array((0,0,0), dtype=FLOAT) )
-from vector import Vec
-X = Vec( np.array((1,0,0), dtype=FLOAT) )
-Y = Vec( np.array((0,1,0), dtype=FLOAT) )
-Z = Vec( np.array((0,0,1), dtype=FLOAT) )
-from plane import plane1vec1pt
+
+O = np.array((0,0,0), dtype=FLOAT).view(Point)
+X = np.array((1,0,0), dtype=FLOAT).view(Vec)
+Y = np.array((0,1,0), dtype=FLOAT).view(Vec)
+Z = np.array((0,0,1), dtype=FLOAT).view(Vec)
+
 PLANEXY = plane1vec1pt(Z, O)
 PLANEXZ = plane1vec1pt(Y, O)
 PLANEYZ = plane1vec1pt(X, O)

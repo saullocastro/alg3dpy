@@ -1,12 +1,15 @@
 import numpy as np
 
-from constants import FLOAT, MAXID
 from distances import distptpt, distlinept, distplanept
 
 class Point(np.ndarray):
     uniqueid = 1
 
-    def __array_finalize__(self):
+    def __array_finalize__(self, obj):
+        self.id = Point.uniqueid
+        Point.uniqueid += 1
+
+    def __init__(self):
         self.id = Point.uniqueid
         Point.uniqueid += 1
 
@@ -25,12 +28,7 @@ class Point(np.ndarray):
     def norm(self):
         return np.linalg.norm(self)
 
-    def __str__( self ):
-        return str( self)
-        #return 'Point ID %d: x1 = %2.3f, x2 = %2.3f, x3 = %2.3f'\
-        #        % (self.id, self[0], self[1], self[2])
-
-    def __repr__( self ):
+    def __repr__(self):
         return 'alg3dpy.Point class'
 
     def distfrom(self, entity):
