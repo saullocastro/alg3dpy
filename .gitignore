@@ -1,5 +1,9 @@
 # Temp files to ignore
 #########################
+build
+dist
+version.py
+*.egg-info
 tmp*.*
 temp*.*
 test*.*
