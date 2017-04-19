@@ -1,6 +1,6 @@
-import numpy as np
+from __future__ import absolute_import
 
-from distances import distptpt, distlinept, distplanept
+import numpy as np
 
 class Point(np.ndarray):
     uniqueid = 1
@@ -32,6 +32,7 @@ class Point(np.ndarray):
         return 'alg3dpy.Point class'
 
     def distfrom(self, entity):
+        from .distances import distptpt, distlinept, distplanept
         cname = entity.__class__.__name__
         if cname == 'Point' or cname == 'Grid':
             return distptpt(self, entity)
@@ -39,4 +40,13 @@ class Point(np.ndarray):
             return distlinept(entity, self)
         if cname == 'Plane':
             return distplanept(entity, self)
+
+def aspoint(a):
+    from .constants import FLOAT
+    if isinstance(a, Point):
+        return a
+    else:
+        return np.asarray(a, dtype=FLOAT).view(Point)
+
+
 

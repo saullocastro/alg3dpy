@@ -1,37 +1,39 @@
-from constants import TOL, ZER
-import sys
+from __future__ import absolute_import
+
 import numpy as np
-#
-# INTERSECTION OPERATIONS
-#
-def intersectplaneline(plane, line, extend_line = False):
-    if plane.__class__.__name__ <> 'Plane':
-        print 'Input is not a valid plane!'
-        sys.exit()
-    if line.__class__.__name__ <> 'Line':
-        print 'Input is not a valid line!'
-        sys.exit()
-    if np.dot( plane.normal, Vec( line.array ) ) < TOL:
+
+
+def intersectplaneline(plane, line, extend_line=False):
+    from .constants import TOL
+    from .line import asline
+    line = asline(line)
+    if plane.__class__.__name__ != 'Plane':
+        raise ValueError('Input is not a valid plane!')
+    if line.__class__.__name__ != 'Line':
+        raise ValueError('Input is not a valid line!')
+    if np.dot(plane.normal, line.pt2 - line.pt1) < TOL:
         return False
-        sys.exit()
-    x1 = line.pt1.x1
-    y1 = line.pt1.x2
-    z1 = line.pt1.x3
-    x2 = line.pt2.x1
-    y2 = line.pt2.x2
-    z2 = line.pt2.x3
-    t = (plane.A * x1 + plane.B * y1 + plane.C * z1 + plane.D) / \
-        (plane.A * (x1 - x2) + plane.B * (y1 - y2) + plane.C * (z1 - z2))
+    x1 = line.pt1.x
+    y1 = line.pt1.y
+    z1 = line.pt1.z
+    x2 = line.pt2.x
+    y2 = line.pt2.y
+    z2 = line.pt2.z
+    t = ((plane.A * x1 + plane.B * y1 + plane.C * z1 + plane.D) /
+         (plane.A * (x1 - x2) + plane.B * (y1 - y2) + plane.C * (z1 - z2)))
     if extend_line == False:
         if t > 1 or t < 0:
             #uncomment after adding a caller identifier.... then allowing message only for a None caller
             #print '''Intersection found beyond line limits. Soluble for 'extend=True'.'''
             return False
-            sys.exit()
     return line.pt(t)
 
 def intersect2lines(line1, line2, extend_line1=False, extend_line2=False):
     #http://paulbourke.net/geometry/lineline3d/
+    from .constants import TOL, ZER
+    from .line import asline
+    line1 = asline(line1)
+    line2 = asline(line2)
     v13 = line2.pt1 - line1.pt1
     v43 = line2.pt1 - line2.pt2
     v21 = line1.pt1 - line1.pt2

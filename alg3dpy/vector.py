@@ -1,10 +1,11 @@
+from __future__ import absolute_import
+
 import numpy as np
 
 class Vec(np.ndarray):
     """
     """
     uniqueid = 1
-
     def __array_finalize__(self, obj):
         self.id = Vec.uniqueid
         Vec.uniqueid += 1
@@ -45,6 +46,7 @@ class Vec(np.ndarray):
         return 'alg3dpy.Vec class'
 
     def anglewith(self, entity):
+        from .angle import angleplanevec, angle2vecs, anglelinevec
         cname = entity.__class__.__name__
         if cname == 'Plane':
             return angleplanevec(entity, self)
@@ -54,8 +56,8 @@ class Vec(np.ndarray):
             return anglelinevec(entity, self)
 
     def cosines_GLOBAL(self):
-        from constants import PLANEXY, PLANEXZ
-
+        from .constants import PLANEXY, PLANEXZ
+        from .angle import cosplanevec
         cosbeta = cosplanevec(PLANEXY, self)
         cosgama = cosplanevec(PLANEXZ, self)
         return [cosbeta, cosgama]
@@ -65,6 +67,16 @@ def ortvec3points(pt1, pt2, pt3):
     vec1 = pt2 - pt1
     vec2 = pt3 - pt1
     return np.cross(vec1, vec2).view(Vec).norm()
+
+def ortvec2vecs(vec1, vec2):
+    return np.cross(vec1, vec2).view(Vec).norm()
+
+def asvector(a):
+    from .constants import FLOAT
+    if isinstance(a, Vec):
+        return a
+    else:
+        return np.asarray(a, dtype=FLOAT).view(Vec)
 
 #Weisstein, Eric W. "Normalized Vector." From MathWorld--A Wolfram Web Resource.
 #   http://mathworld.wolfram.com/NormalizedVector.html

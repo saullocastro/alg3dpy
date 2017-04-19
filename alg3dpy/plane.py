@@ -1,16 +1,18 @@
+from __future__ import absolute_import
+
 import numpy as np
-from arrays import arraydet, arraydet44
-from vector import Vec
+
+
 class Plane(object):
 
     def __init__(self, A=None, B=None, C=None, D=None):
-        from constants import FLOAT
-
+        from .vector import Vec
+        from .constants import FLOAT
         self.A = A
         self.B = B
         self.C = C
         self.D = D
-        self.normal = Vec( np.array( [A, B, C], dtype=FLOAT ) )
+        self.normal = np.array([A, B, C], dtype=FLOAT).view(Vec)
 
     def __str__(self):
         return 'Plane: A = %2.3f, B = %2.3f, C = %2.3f, D = %2.3f' % \
@@ -20,6 +22,7 @@ class Plane(object):
         return 'alg3dpy Plane class'
 
     def anglewith(self, entity):
+        from .angles import angle2planes, angleplaneline, angleplanevec
         if entity.__class__.__name__ == 'Plane':
             return angle2planes(self, entity)
         if entity.__class__.__name__ == 'Line':
@@ -28,6 +31,7 @@ class Plane(object):
             return angleplanevec(self, entity)
 
     def distfrom(self, entity):
+        from .distances import distplanept, distplaneline, distplaneplane
         if entity.__class__.__name__ == 'Point':
             return distplanept(self, entity)
         if entity.__class__.__name__ == 'Line':
@@ -44,7 +48,8 @@ def plane1vec1pt(vec1, pt):
 
 
 def plane3points(pt1, pt2, pt3):
-    from constants import FLOAT
+    from .constants import FLOAT
+    from .arrays import arraydet
 
     tmp = np.array([[1., pt1[1], pt1[2]],
                     [1., pt2[1], pt2[2]],
@@ -66,8 +71,8 @@ def plane3points(pt1, pt2, pt3):
 
 
 def plane2lines(line1, line2):
-    ortvec = ortvec2vecs(vec2points(line1.pt1, line1.pt2), \
-                         vec2points(line2.pt1, line2.pt2))
+    from .vector import ortvec2vecs
+    ortvec = ortvec2vecs(line1.pt2 - line1.pt1, line2.pt2 - line2.pt1)
     return plane1vec1pt(ortvec, line1.pt1)
 
 
