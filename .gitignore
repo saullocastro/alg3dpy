@@ -6,7 +6,6 @@ version.py
 *.egg-info
 tmp*.*
 temp*.*
-test*.*
 # Generic files to ignore
 #########################
 *~
