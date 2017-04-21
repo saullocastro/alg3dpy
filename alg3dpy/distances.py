@@ -19,7 +19,7 @@ def distplaneplane(plane1, plane2):
 def distplaneline(plane, line, extend_line=False):
     from .line import asline
     line = asline(line)
-    if intersectplaneline(plane, line, extend_line) is False:
+    if intersectplaneline(plane, line, extend_line) is None:
         d1 = distplanept(plane, line.pt1)
         d2 = distplanept(plane, line.pt2)
         return np.array((d1, d2)).min(axis=0)

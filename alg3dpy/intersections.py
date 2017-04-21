@@ -12,7 +12,7 @@ def intersectplaneline(plane, line, extend_line=False):
     if line.__class__.__name__ != 'Line':
         raise ValueError('Input is not a valid line!')
     if np.dot(plane.normal, line.pt2 - line.pt1) < TOL:
-        return False
+        return None
     x1 = line.pt1.x
     y1 = line.pt1.y
     z1 = line.pt1.z
@@ -25,7 +25,7 @@ def intersectplaneline(plane, line, extend_line=False):
         if t > 1 or t < 0:
             #uncomment after adding a caller identifier.... then allowing message only for a None caller
             #print '''Intersection found beyond line limits. Soluble for 'extend=True'.'''
-            return False
+            return None
     return line.pt(t)
 
 def intersect2lines(line1, line2, extend_line1=False, extend_line2=False):
@@ -37,13 +37,13 @@ def intersect2lines(line1, line2, extend_line1=False, extend_line2=False):
     v13 = line2.pt1 - line1.pt1
     v43 = line2.pt1 - line2.pt2
     v21 = line1.pt1 - line1.pt2
-    d1343 = v13.i * v43.i + v13.j * v43.j + v13.k * v43.k
-    d4321 = v43.i * v21.i + v43.j * v21.j + v43.k * v21.k
-    d1321 = v13.i * v21.i + v13.j * v21.j + v13.k * v21.k
-    d4343 = v43.i * v43.i + v43.j * v43.j + v43.k * v43.k
-    d2121 = v21.i * v21.i + v21.j * v21.j + v21.k * v21.k
+    d1343 = v13.x * v43.x + v13.y * v43.y + v13.z * v43.z
+    d4321 = v43.x * v21.x + v43.y * v21.y + v43.z * v21.z
+    d1321 = v13.x * v21.x + v13.y * v21.y + v13.z * v21.z
+    d4343 = v43.x * v43.x + v43.y * v43.y + v43.z * v43.z
+    d2121 = v21.x * v21.x + v21.y * v21.y + v21.z * v21.z
     denom = d2121 * d4343 - d4321 * d4321
-    if abs(denom) < ZER:
+    if abs(denom) <= ZER:
         return None
     else:
         numer = d1343 * d4321 - d1321 * d4343
@@ -61,5 +61,4 @@ def intersect2lines(line1, line2, extend_line1=False, extend_line2=False):
         if disttest1 > TOL:
             return None
         else:
-            ans = ptline1.__add__(ptline2, vec=False) * 0.5
-            return ans
+            return (ptline1 + ptline2) / 2.
