@@ -29,29 +29,40 @@ class Line(np.ndarray):
         return 'alg3dpy.Line class'
 
     def anglewith(self, entity):
-        cname = entity.__class__.__name__
-        if 'Plane' in cname:
+        from .plane import Plane
+        from .vector import Vec
+        from .line import Line
+        if isinstance(entity, Plane):
             return angleplaneline(entity, self)
-        elif 'Vec' in cname:
+        elif isinstance(entity, Vec):
             return anglelinevec(self, entity)
-        elif 'Line' in cname:
+        elif isinstance(entity, Line):
             return angle2lines(self, entity)
+        else:
+            raise NotImplementedError
 
     def distfrom(self, entity, extend_me=False, extend_other=False):
-        cname = entity.__class__.__name__
-        if 'Point' in cname or 'list' in cname or 'tuple' in cname or 'ndarray' in cname:
+        from .plane import Plane
+        from .line import Line
+        if (isinstance(entity, list) or isinstance(entity, tuple) or
+                isinstance(entity, np.ndarray)):
             return distlinept(self, entity, extend_me)
-        elif 'Plane' in cname:
+        elif isinstance(entity, Plane):
             return distplaneline(self, entity, extend_me)
-        elif 'Line' in cname:
+        elif isinstance(entity, Line):
             return distlineline(self, entity)
+        else:
+            raise NotImplementedError
 
     def intersect(self, entity, extend_me=False, extend_other=False):
-        cname = entity.__class__.__name__
-        if 'Line' in cname:
+        from .plane import Plane
+        from .line import Line
+        if isinstance(entity, Line):
             return intersect2lines(self, entity, extend_me, extend_other)
-        elif 'Plane' in cname:
+        elif isinstance(entity, Plane):
             return intersectplaneline(entity, self, extend_me)
+        else:
+            raise NotImplementedError
 
     def pt(self, t):
         tmp = np.array([self.pt1[0] + t * (self.pt2[0] - self.pt1[0]),
@@ -60,13 +71,13 @@ class Line(np.ndarray):
         return tmp.view(Point)
 
     def extendto(self, entity, extend_other=False):
-        tmp = self.intersect(entity, True, extend_other)
+        extend_me = True
+        tmp = self.intersect(entity, extend_me, extend_other)
         if tmp is not None:
             check = entity.distfrom(self.pt1) < entity.distfrom(self.pt2)
             self.pt1[check] = tmp[check]
             self.pt2[~check] = tmp[~check]
             return True
-
         else:
             return False
 
