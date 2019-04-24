@@ -8,7 +8,7 @@ from .vector import asvector
 def cos2vecs(vec1, vec2):
     vec1 = asvector(vec1)
     vec2 = asvector(vec2)
-    return (np.dot(vec1, vec2) / vec1.mod() * vec2.mod())
+    return np.dot(vec1, vec2) / (vec1.mod() * vec2.mod())
 
 
 def sin2vecs(vec1, vec2):
