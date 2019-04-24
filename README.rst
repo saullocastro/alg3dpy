@@ -1,6 +1,3 @@
-3D Algebra in Python (alg3dpy)
-==============================
-
 Travis-CI status:
 
 .. image:: https://travis-ci.org/saullocastro/alg3dpy.svg?branch=master
@@ -13,7 +10,12 @@ Coverage status:
     :target: https://coveralls.io/github/saullocastro/alg3dpy?branch=master
 
 
+3D Algebra in Python (alg3dpy)
+==============================
+
+
 Very useful basic algebra operations with points, vectors, planes:
+
 - Calculate distances
 - Calculate angles
 - Projections
