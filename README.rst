@@ -18,6 +18,7 @@ Very useful basic algebra operations with points, vectors, planes:
 
 - Calculate distances
 - Calculate angles
+- Intersections
 - Projections
 
 Licensing
