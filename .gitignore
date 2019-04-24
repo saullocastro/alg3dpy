@@ -1,5 +1,6 @@
 # Temp files to ignore
 #########################
+.coverage
 build
 dist
 version.py
