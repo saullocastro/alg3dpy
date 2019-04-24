@@ -11,9 +11,9 @@ def distplanept(plane, pt):
     from .plane import Plane
     assert isinstance(plane, Plane)
     pt = aspoint(pt)
-    return (plane.A * pt[0] +
+    return np.abs((plane.A * pt[0] +
             plane.B * pt[1] +
-            plane.C * pt[2] + plane.D) / plane.normal.mod()
+            plane.C * pt[2] + plane.D) / plane.normal.mod())
 
 def distplaneplane(plane1, plane2):
     from .plane import Plane
