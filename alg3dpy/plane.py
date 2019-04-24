@@ -4,7 +4,6 @@ import numpy as np
 
 
 class Plane(object):
-
     def __init__(self, A=None, B=None, C=None, D=None):
         from .vector import Vec
         from .constants import FLOAT

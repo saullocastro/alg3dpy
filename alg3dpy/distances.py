@@ -8,17 +8,24 @@ from .intersections import intersectplaneline
 
 def distplanept(plane, pt):
     from .point import aspoint
+    from .plane import Plane
+    assert isinstance(plane, Plane)
     pt = aspoint(pt)
     return (plane.A * pt[0] +
             plane.B * pt[1] +
             plane.C * pt[2] + plane.D) / plane.normal.mod()
 
 def distplaneplane(plane1, plane2):
+    from .plane import Plane
+    assert isinstance(plane1, Plane)
+    assert isinstance(plane2, Plane)
     return np.abs(normplane(plane1).D - normplane(plane2).D)
 
 def distplaneline(plane, line, extend_line=False):
     from .line import asline
+    from .plane import Plane
     line = asline(line)
+    assert isinstance(plane, Plane)
     if intersectplaneline(plane, line, extend_line) is None:
         d1 = distplanept(plane, line.pt1)
         d2 = distplanept(plane, line.pt2)
