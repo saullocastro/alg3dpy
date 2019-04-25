@@ -1,7 +1,7 @@
 import numpy as np
 
 from alg3dpy.distances import (distplanept, distplaneplane, distplaneline,
-        distptpt, distlinept, distlineline)
+        distptpt, distlinept, distlineline, ptaboutplane)
 from alg3dpy.constants import PLANEXY
 from alg3dpy.plane import plane1vec1pt
 
@@ -9,7 +9,7 @@ from alg3dpy.plane import plane1vec1pt
 def test_distances():
     assert distplanept(PLANEXY, [0, 0, 2.5]) == 2.5
     offset = plane1vec1pt(PLANEXY.normal, [0, 0, 100])
-    assert distplanept(offset, [0, 0, 2.5]) == -97.5
+    assert distplanept(offset, [0, 0, 2.5]) == 97.5
     assert distplanept(offset, [0, 0, 105.]) == 5.
     assert distplaneplane(PLANEXY, offset) == 100.
     line = np.array([[0, 0, 1.5], [0, 0, 2.]])
@@ -31,4 +31,5 @@ def test_distances():
             True) == 0
     assert distlineline([[0, 0, 1], [0, 0, 2]], [[0, 1.5, 0], [0, 3, 0]], True,
             True) == 0
-
+    assert ptaboutplane([1, 2, 3], plane1vec1pt([1, 0, 0], [5, 0, 0])) == -4
+    assert ptaboutplane([1, 2, 3], plane1vec1pt([-1, 0, 0], [5, 0, 0])) == 4

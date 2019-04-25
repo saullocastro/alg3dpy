@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import numpy as np
+from numpy.linalg import det
 
 
 class Plane(object):
@@ -22,21 +23,36 @@ class Plane(object):
 
     def anglewith(self, entity):
         from .angles import angle2planes, angleplaneline, angleplanevec
-        if entity.__class__.__name__ == 'Plane':
+        from .line import Line
+        from .plane import Plane
+        from .vector import Vec
+        if isinstance(entity, Plane):
             return angle2planes(self, entity)
-        if entity.__class__.__name__ == 'Line':
+        elif isinstance(entity, Line):
             return angleplaneline(self, entity)
-        if entity.__class__.__name__ == 'Vec':
+        elif isinstance(entity, Vec):
             return angleplanevec(self, entity)
+        else:
+            raise NotImplementedError
 
-    def distfrom(self, entity):
+    def distfrom(self, entity, extend_other=False):
         from .distances import distplanept, distplaneline, distplaneplane
-        if entity.__class__.__name__ == 'Point':
-            return distplanept(self, entity)
-        if entity.__class__.__name__ == 'Line':
-            return distplaneline(self, entity)
-        if entity.__class__.__name__ == 'Plane':
+        from .plane import Plane
+        from .line import Line
+        if isinstance(entity, Line):
+            return distplaneline(self, entity, extend_line=extend_other)
+        elif isinstance(entity, Plane):
             return distplaneplane(self, entity)
+        elif (isinstance(entity, list) or isinstance(entity, tuple) or
+                isinstance(entity, np.ndarray)):
+            return distplanept(self, entity)
+        else:
+            raise NotImplementedError
+
+
+def normplane(plane):
+    norm = np.sqrt(plane.A**2 + plane.B**2 + plane.C**2)
+    return Plane(plane.A / norm, plane.B / norm, plane.C / norm, plane.D / norm)
 
 
 def plane1vec1pt(vec1, pt):
@@ -48,33 +64,29 @@ def plane1vec1pt(vec1, pt):
 
 def plane3points(pt1, pt2, pt3):
     from .constants import FLOAT
-    from .arrays import arraydet
-
     tmp = np.array([[1., pt1[1], pt1[2]],
                     [1., pt2[1], pt2[2]],
                     [1., pt3[1], pt3[2]]], dtype=FLOAT)
-    A = arraydet(tmp)
+    A = det(tmp)
     tmp = np.array([[pt1[0], 1., pt1[2]],
                     [pt2[0], 1., pt2[2]],
                     [pt3[0], 1., pt3[2]]], dtype=FLOAT)
-    B = arraydet(tmp)
+    B = det(tmp)
     tmp = np.array([[pt1[0], pt1[1], 1.],
                     [pt2[0], pt2[1], 1.],
                     [pt3[0], pt3[1], 1.]], dtype=FLOAT)
-    C = arraydet(tmp)
+    C = det(tmp)
     tmp = np.array([[pt1[0], pt1[1], pt1[2]],
                     [pt2[0], pt2[1], pt2[2]],
                     [pt3[0], pt3[1], pt3[2]]], dtype=FLOAT)
-    D = -arraydet(tmp)
-    return normplane(A, B, C, D)
+    D = -det(tmp)
+    return normplane(Plane(A, B, C, D))
 
 
 def plane2lines(line1, line2):
     from .vector import ortvec2vecs
+    from .line import asline
+    line1 = asline(line1)
+    line2 = asline(line2)
     ortvec = ortvec2vecs(line1.pt2 - line1.pt1, line2.pt2 - line2.pt1)
     return plane1vec1pt(ortvec, line1.pt1)
-
-
-def normplane( plane ):
-    norm = np.sqrt(plane.A**2 + plane.B**2 + plane.C**2)
-    return Plane(plane.A / norm, plane.B / norm, plane.C / norm, plane.D / norm)

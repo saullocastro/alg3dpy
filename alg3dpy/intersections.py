@@ -5,12 +5,11 @@ import numpy as np
 
 def intersectplaneline(plane, line, extend_line=False):
     from .constants import TOL
-    from .line import asline
+    from .line import asline, Line
+    from .plane import Plane
     line = asline(line)
-    if plane.__class__.__name__ != 'Plane':
+    if not isinstance(plane, Plane):
         raise ValueError('Input is not a valid plane!')
-    if line.__class__.__name__ != 'Line':
-        raise ValueError('Input is not a valid line!')
     if np.dot(plane.normal, line.pt2 - line.pt1) < TOL:
         return None
     x1 = line.pt1.x
@@ -21,11 +20,9 @@ def intersectplaneline(plane, line, extend_line=False):
     z2 = line.pt2.z
     t = ((plane.A * x1 + plane.B * y1 + plane.C * z1 + plane.D) /
          (plane.A * (x1 - x2) + plane.B * (y1 - y2) + plane.C * (z1 - z2)))
-    if extend_line == False:
-        if t > 1 or t < 0:
-            #uncomment after adding a caller identifier.... then allowing message only for a None caller
-            #print '''Intersection found beyond line limits. Soluble for 'extend=True'.'''
-            return None
+    if (t > 1 or t < 0) and not extend_line:
+        print('Intersection solvable only with extend_line=True, returning None')
+        return None
     return line.pt(t)
 
 def intersect2lines(line1, line2, extend_line1=False, extend_line2=False):
@@ -47,14 +44,14 @@ def intersect2lines(line1, line2, extend_line1=False, extend_line2=False):
         return None
     else:
         numer = d1343 * d4321 - d1321 * d4343
-        s = numer / denom
-        t = (d1343 + d4321 * s) / d4343
+        s = numer/denom
+        t = (d1343 + d4321*s)/d4343
         if extend_line1 == False:
-            if s < 0: s = 0
-            if s > 1: s = 1
+            s = min(s, 1)
+            s = max(s, 0)
         if extend_line2 == False:
-            if t < 0: t = 0
-            if t > 1: t = 1
+            t = min(t, 1)
+            t = max(t, 0)
         ptline1 = line1.pt(s)
         ptline2 = line2.pt(t)
         disttest1 = ptline1.distfrom(ptline2)

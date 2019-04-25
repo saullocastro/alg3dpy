@@ -43,14 +43,16 @@ class Line(np.ndarray):
 
     def distfrom(self, entity, extend_me=False, extend_other=False):
         from .plane import Plane
+        from .point import Point
         from .line import Line
-        if (isinstance(entity, list) or isinstance(entity, tuple) or
-                isinstance(entity, np.ndarray)):
-            return distlinept(self, entity, extend_me)
+        if isinstance(entity, Line):
+            return distlineline(self, entity, extend_line1=extend_me,
+                    extend_line2=extend_other)
         elif isinstance(entity, Plane):
             return distplaneline(self, entity, extend_me)
-        elif isinstance(entity, Line):
-            return distlineline(self, entity)
+        elif (isinstance(entity, list) or isinstance(entity, tuple) or
+                isinstance(entity, Point)):
+            return distlinept(self, entity, extend_me)
         else:
             raise NotImplementedError
 
@@ -65,16 +67,22 @@ class Line(np.ndarray):
             raise NotImplementedError
 
     def pt(self, t):
-        tmp = np.array([self.pt1[0] + t * (self.pt2[0] - self.pt1[0]),
-                        self.pt1[1] + t * (self.pt2[1] - self.pt1[1]),
-                        self.pt1[2] + t * (self.pt2[2] - self.pt1[2])])
+        tmp = np.array([self.pt1[i] + t*(self.pt2[i] - self.pt1[i]) for i in range(3)])
         return tmp.view(Point)
 
     def extendto(self, entity, extend_other=False):
         extend_me = True
         tmp = self.intersect(entity, extend_me, extend_other)
         if tmp is not None:
-            check = entity.distfrom(self.pt1) < entity.distfrom(self.pt2)
+            if isinstance(entity, Line):
+                dist1 = entity.distfrom(self.pt1, extend_me=True,
+                        extend_other=extend_other)
+                dist2 = entity.distfrom(self.pt2, extend_me=True,
+                        extend_other=extend_other)
+            else:
+                dist1 = entity.distfrom(self.pt1, extend_other=extend_other)
+                dist2 = entity.distfrom(self.pt2, extend_other=extend_other)
+            check = dist1 < dist2
             self.pt1[check] = tmp[check]
             self.pt2[~check] = tmp[~check]
             return True

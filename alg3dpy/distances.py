@@ -6,14 +6,17 @@ from .plane import normplane
 from .angles import angle2lines
 from .intersections import intersectplaneline
 
-def distplanept(plane, pt):
+def ptaboutplane(pt, plane):
     from .point import aspoint
     from .plane import Plane
     assert isinstance(plane, Plane)
     pt = aspoint(pt)
-    return np.abs((plane.A * pt[0] +
+    return (plane.A * pt[0] +
             plane.B * pt[1] +
-            plane.C * pt[2] + plane.D) / plane.normal.mod())
+            plane.C * pt[2] + plane.D) / plane.normal.mod()
+
+def distplanept(plane, pt):
+    return np.abs(ptaboutplane(pt, plane))
 
 def distplaneplane(plane1, plane2):
     from .plane import Plane
@@ -58,8 +61,8 @@ def distlinept(line, pt, extend_line=False):
           y1**2 + y2 * y3 - y1 * y3 - y1 * y2 +
           z1**2 + z2 * z3 - z1 * z3 - z1 * z2)/den)
     if not extend_line:
-        if t > 1: t = 1
-        if t < 0: t = 0
+        t = min(t, 1)
+        t = max(t, 0)
     return distptpt(line.pt(t), pt)
 
 def distlineline(line1, line2, extend_line1=False, extend_line2=False):
@@ -90,14 +93,16 @@ def distlineline(line1, line2, extend_line1=False, extend_line2=False):
           (y2a * (y2a - y1a - y2b) + y1a * y2b) +
           (z2a * (z2a - z1a - z2b) + z1a * z2b))
     if angle2lines(line1, line2) < 0.01:
-        return distlinept(line1, line2.pt1, extend_line1)
+        dist1 = distlinept(line1, line2.pt1, extend_line1)
+        dist2 = distlinept(line2, line1.pt1, extend_line2)
+        return min(dist1, dist2)
     else:
         t = (C1 * C5 - C4 * C3) / (C2 * C4 - C1**2)
         u = (C2 * C5 - C1 * C3) / (C2 * C4 - C1**2)
-        if extend_line1 == False:
-            if t > 1: t = 1
-            if t < 0: t = 0
-        if extend_line2 == False:
-            if u > 1: u = 1
-            if u < 0: u = 0
+        if not extend_line1:
+            t = min(t, 1)
+            t = max(t, 0)
+        if not extend_line2:
+            u = min(u, 1)
+            u = max(u, 0)
         return distptpt(line1.pt(t), line2.pt(u))

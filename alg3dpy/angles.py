@@ -35,8 +35,6 @@ def cosplanevec(plane, vec):
 
 
 def angle2vecs(vec1, vec2):
-    vec1 = asvector(vec1)
-    vec2 = asvector(vec2)
     return np.arccos(cos2vecs(vec1, vec2))
 
 

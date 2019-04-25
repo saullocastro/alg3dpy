@@ -46,13 +46,14 @@ class Vec(np.ndarray):
         return 'alg3dpy.Vec class'
 
     def anglewith(self, entity):
-        from .angle import angleplanevec, angle2vecs, anglelinevec
-        cname = entity.__class__.__name__
-        if cname == 'Plane':
+        from .angles import angleplanevec, angle2vecs, anglelinevec
+        from .line import Line
+        from .plane import Plane
+        if isinstance(entity, Plane):
             return angleplanevec(entity, self)
-        if cname == 'Vec':
+        if isinstance(entity, Vec):
             return angle2vecs(self, entity)
-        if cname == 'Line':
+        if isinstance(entity, Line):
             return anglelinevec(entity, self)
 
     def cosines_GLOBAL(self):
@@ -63,20 +64,22 @@ class Vec(np.ndarray):
         return [cosbeta, cosgama]
 
 
-def ortvec3points(pt1, pt2, pt3):
-    vec1 = pt2 - pt1
-    vec2 = pt3 - pt1
-    return np.cross(vec1, vec2).view(Vec).norm()
-
-def ortvec2vecs(vec1, vec2):
-    return np.cross(vec1, vec2).view(Vec).norm()
-
 def asvector(a):
     from .constants import FLOAT
     if isinstance(a, Vec):
         return a
     else:
         return np.asarray(a, dtype=FLOAT).view(Vec)
+
+
+def ortvec3points(pt1, pt2, pt3):
+    vec1 = pt2 - pt1
+    vec2 = pt3 - pt1
+    return np.cross(vec1, vec2).view(Vec).norm()
+
+
+def ortvec2vecs(vec1, vec2):
+    return np.cross(vec1, vec2).view(Vec).norm()
 
 #Weisstein, Eric W. "Normalized Vector." From MathWorld--A Wolfram Web Resource.
 #   http://mathworld.wolfram.com/NormalizedVector.html

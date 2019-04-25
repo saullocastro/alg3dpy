@@ -31,14 +31,16 @@ class Point(np.ndarray):
     def __repr__(self):
         return 'alg3dpy.Point class'
 
-    def distfrom(self, entity):
+    def distfrom(self, entity, extend_other=False):
         from .distances import distptpt, distlinept, distplanept
-        cname = entity.__class__.__name__
-        if cname == 'Point' or cname == 'Grid':
+        from .line import Line
+        from .plane import Plane
+        if (isinstance(entity, list) or isinstance(entity, tuple) or
+                isinstance(entity, Point)):
             return distptpt(self, entity)
-        if cname == 'Line':
-            return distlinept(entity, self)
-        if cname == 'Plane':
+        elif isinstance(entity, Line):
+            return distlinept(entity, self, extend_line=extend_other)
+        if isinstance(entity, Plane):
             return distplanept(entity, self)
 
 def aspoint(a):
