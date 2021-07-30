@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-VERSION = "0.17.0"
+VERSION = "0.18.0"
 
 setup(
     name = "alg3dpy",
@@ -30,5 +30,5 @@ setup(
 )
 
 with open("./alg3dpy/version.py", "wb") as f:
-    f.write(b"__version__ = %s\n" % VERSION.encode())
+    f.write(b'__version__ = "%s"\n' % VERSION.encode())
 
