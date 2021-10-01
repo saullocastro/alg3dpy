@@ -26,7 +26,15 @@ def test_angles():
     assert isclose(cosplanevec(PLANEXY, [-1, 0, +1]), cos(pi/4))
 
     assert isclose(angleplanevec(PLANEXY, [-1, 0, -1]), -pi/4)
+    print(angleplanevec(PLANEXY, [-1, 0, -1]))
     assert isclose(cosplanevec(PLANEXY, [-1, 0, -1]), cos(-pi/4))
+    print(cosplanevec(PLANEXY, [-1, 0, -1]))
 
     assert isclose(angleplanevec(PLANEXY, [+1, 0, -1]), -pi/4)
     assert isclose(cosplanevec(PLANEXY, [+1, 0, -1]), cos(-pi/4))
+
+    assert isclose(angleplanevec(PLANEXY, [+1, 0, -1]), -pi/4)
+    assert isclose(cosplanevec(PLANEXY, [+1, 0, -1]), cos(-pi/4))
+
+if __name__ == "__main__":
+    test_angles()

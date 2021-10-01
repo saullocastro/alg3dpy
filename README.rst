@@ -21,10 +21,12 @@ Very useful basic algebra operations with points, vectors, planes:
 - Intersections
 - Projections
 
+
 Licensing
 ---------
 
-The new BSD License (`see the LICENSE file for details
-<https://raw.github.com/saullocastro/alg3dpy/master/LICENSE>`_)
-covers all files in the alg3d repository unless stated otherwise.
+Distrubuted under the 3-Clause BSD license (`see the LICENSE file for details
+<https://raw.github.com/saullocastro/alg3dpy/master/LICENSE>`_).
+
+Contact: S.G.P.Castro@tudelft.nl.
 

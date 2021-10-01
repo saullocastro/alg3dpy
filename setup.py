@@ -8,24 +8,39 @@ from setuptools import setup, find_packages
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-VERSION = "0.18.0"
+VERSION = "0.18.1"
+
+CLASSIFIERS = """\
+
+Development Status :: 4 - Beta
+Intended Audience :: Science/Research
+Intended Audience :: Education
+Topic :: Scientific/Engineering
+Topic :: Education
+Topic :: Software Development :: Libraries :: Python Modules
+Operating System :: POSIX :: BSD
+Operating System :: Microsoft :: Windows
+Operating System :: Unix
+Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.7
+Programming Language :: Python :: 3.8
+Programming Language :: Python :: 3.9
+License :: OSI Approved :: BSD License
+
+"""
 
 setup(
     name = "alg3dpy",
     version = VERSION,
     author = "Saullo G. P. Castro",
-    author_email = "castrosaullo@gmail.com",
+    author_email = "S.G.P.Castro@tudelft.nl",
     description = ("3D Algebra in Python"),
     license = "BSD",
     keywords = "algebra 3D mathematics geometry",
     url = "https://github.com/saullocastro/alg3dpy",
     packages=find_packages(),
     long_description=read('README.rst'),
-    classifiers=[
-        "Development Status :: 4 - Beta",
-        "Topic :: Scientific/Engineering :: Mathematics",
-        "License :: OSI Approved :: BSD License",
-    ],
+    classifiers = [_f for _f in CLASSIFIERS.split('\n') if _f],
     install_requires=["numpy"],
 )
 
